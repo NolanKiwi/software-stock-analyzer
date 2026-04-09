@@ -166,19 +166,33 @@ def get_data(force_refresh: bool = False) -> pd.DataFrame:
     """
     Return a DataFrame of all companies.
     Uses cached CSV unless data is stale or force_refresh is True.
+    Falls back to the hardcoded snapshot if live data is unavailable.
     """
+    from snapshot_data import get_snapshot_df
+
     if not force_refresh and not is_data_stale():
         df = load_csv()
         if not df.empty:
             logger.info("Loaded from cache (%s)", CSV_PATH)
             return df
 
-    df = fetch_all()
+    try:
+        df = fetch_all()
+    except Exception as exc:
+        logger.warning("fetch_all failed: %s — using snapshot fallback", exc)
+        df = pd.DataFrame()
+
     if not df.empty:
-        save_csv(df)
-        save_sqlite(df)
-        save_snapshot(df)
-    return df
+        try:
+            save_csv(df)
+            save_sqlite(df)
+            save_snapshot(df)
+        except Exception as exc:
+            logger.warning("Could not persist data: %s", exc)
+        return df
+
+    logger.warning("Live fetch returned no data — falling back to snapshot")
+    return get_snapshot_df()
 
 
 if __name__ == "__main__":

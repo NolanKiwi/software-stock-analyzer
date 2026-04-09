@@ -106,6 +106,15 @@ if df.empty:
     st.error("데이터를 불러올 수 없습니다. 잠시 후 다시 시도해 주세요.")
     st.stop()
 
+# Show banner if we're showing snapshot (fallback) data
+updated_at = df["updated_at"].iloc[0] if "updated_at" in df.columns else ""
+if "스냅샷" in str(updated_at):
+    st.warning(
+        "⚠️ 실시간 시장 데이터를 불러올 수 없어 **2026-04-10 스냅샷 데이터**를 표시합니다. "
+        "잠시 후 '🔄 데이터 새로고침'을 눌러 주세요.",
+        icon="📸",
+    )
+
 stats = summary_stats(df)
 
 # ---------------------------------------------------------------------------
