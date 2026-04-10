@@ -68,17 +68,13 @@ with st.sidebar:
     st.caption("캐시 유효시간: 30분")
     st.divider()
 
-    # Category filter (multi-select)
+    # Category filter — simple checkboxes
+    st.markdown("**카테고리 필터**")
     all_categories = list(CAT_COLORS.keys())
-    selected_cats = st.multiselect(
-        "카테고리 필터",
-        options=all_categories,
-        default=all_categories,
-        help="표시할 카테고리를 선택하세요",
-    )
-
-    # ETF toggle
-    show_etf = "ETF" in selected_cats
+    selected_cats = []
+    for cat in all_categories:
+        if st.checkbox(cat, value=True, key=f"cat_{cat}"):
+            selected_cats.append(cat)
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Data loading
@@ -204,12 +200,7 @@ if page == "📊 전체 개요":
         "decline_from_high_pct": "고점 대비 하락률(%)",
     }).sort_values("고점 대비 하락률(%)", ascending=True)
 
-    st.dataframe(
-        display.style
-        .background_gradient(subset=["고점 대비 하락률(%)"], cmap="RdYlGn")
-        .background_gradient(subset=["당일 등락률(%)"], cmap="RdYlGn"),
-        use_container_width=True, hide_index=True,
-    )
+    st.dataframe(display, use_container_width=True, hide_index=True)
 
     st.divider()
 
@@ -386,10 +377,7 @@ elif page == "🗂️ 섹터 분석":
     # ── Sub-industry table ────────────────────────────────────────────────────
     st.subheader("세부 업종별 요약")
     sub_df = sub_industry_summary(df)
-    st.dataframe(
-        sub_df.style.background_gradient(subset=["평균하락률"], cmap="RdYlGn"),
-        use_container_width=True, hide_index=True,
-    )
+    st.dataframe(sub_df, use_container_width=True, hide_index=True)
 
     # ── Category detail tables ────────────────────────────────────────────────
     st.subheader("카테고리별 종목 현황")
@@ -408,7 +396,7 @@ elif page == "🗂️ 섹터 분석":
                     "day_change_pct":        "당일(%)",
                     "high_52w":              "52주 고점",
                     "decline_from_high_pct": "고점 대비(%)",
-                }).style.background_gradient(subset=["고점 대비(%)"], cmap="RdYlGn"),
+                }),
                 use_container_width=True, hide_index=True,
             )
 
