@@ -40,14 +40,37 @@ div[data-testid="column"] { padding: 0 4px; }
 
 # Category colours
 CAT_COLORS = {
-    "애플리케이션 소프트웨어":     "#3B82F6",
-    "시스템 소프트웨어 / 보안":    "#EF4444",
+    "CDN / 엣지 인프라":          "#06B6D4",
+    "사이버보안":                 "#EF4444",
+    "클라우드 인프라":            "#2563EB",
+    "관측성 / DevOps":            "#8B5CF6",
+    "데이터 클라우드 / 분석":      "#14B8A6",
+    "SaaS / 애플리케이션":         "#3B82F6",
+    "시스템 소프트웨어":           "#F97316",
     "인터넷 / 클라우드 인프라":    "#10B981",
     "IT 컨설팅 / 서비스":         "#F59E0B",
-    "데이터 처리 / 아웃소싱":      "#8B5CF6",
+    "데이터 처리 / 아웃소싱":      "#64748B",
     "ETF":                        "#6B7280",
-    "기타":                        "#9CA3AF",
+    "기타":                       "#9CA3AF",
+    # Backward-compatible labels for existing cached/snapshot data.
+    "애플리케이션 소프트웨어":     "#3B82F6",
+    "시스템 소프트웨어 / 보안":    "#EF4444",
 }
+
+CATEGORY_ORDER = [
+    "CDN / 엣지 인프라",
+    "사이버보안",
+    "클라우드 인프라",
+    "관측성 / DevOps",
+    "데이터 클라우드 / 분석",
+    "SaaS / 애플리케이션",
+    "시스템 소프트웨어",
+    "인터넷 / 클라우드 인프라",
+    "IT 컨설팅 / 서비스",
+    "데이터 처리 / 아웃소싱",
+    "ETF",
+    "기타",
+]
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Sidebar
@@ -66,15 +89,6 @@ with st.sidebar:
 
     refresh_btn = st.button("🔄 데이터 새로고침", use_container_width=True)
     st.caption("캐시 유효시간: 30분")
-    st.divider()
-
-    # Category filter — simple checkboxes
-    st.markdown("**카테고리 필터**")
-    all_categories = list(CAT_COLORS.keys())
-    selected_cats = []
-    for cat in all_categories:
-        if st.checkbox(cat, value=True, key=f"cat_{cat}"):
-            selected_cats.append(cat)
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Data loading
@@ -99,6 +113,18 @@ if raw_df.empty:
 # Snapshot banner
 if "스냅샷" in str(raw_df.get("updated_at", pd.Series([""])).iloc[0]):
     st.warning("⚠️ 실시간 데이터 수집 실패 — 스냅샷 데이터를 표시합니다. '🔄 새로고침'을 눌러보세요.", icon="📸")
+
+# Category filter
+with st.sidebar:
+    st.divider()
+    st.markdown("**카테고리 필터**")
+    present_categories = set(raw_df["category"].dropna().unique())
+    ordered_categories = [cat for cat in CATEGORY_ORDER if cat in present_categories]
+    ordered_categories.extend(sorted(present_categories - set(ordered_categories)))
+    selected_cats = []
+    for cat in ordered_categories:
+        if st.checkbox(cat, value=True, key=f"cat_{cat}"):
+            selected_cats.append(cat)
 
 # Apply category filter
 df = raw_df[raw_df["category"].isin(selected_cats)].copy() if selected_cats else raw_df.copy()
@@ -517,9 +543,14 @@ S&P 500 및 주요 소프트웨어 기업 **{stats.get('total', '100+')}개 종�
 ### 카테고리 분류
 | 카테고리 | 설명 |
 |----------|------|
-| 애플리케이션 소프트웨어 | SaaS, ERP, CRM, AI 소프트웨어 등 |
-| 시스템 소프트웨어 / 보안 | OS, 사이버보안, 네트워크 보안 |
-| 인터넷 / 클라우드 인프라 | CDN, 클라우드 플랫폼, 도메인 서비스 |
+| CDN / 엣지 인프라 | CDN, 엣지 네트워크, 애플리케이션 전송 |
+| 사이버보안 | 엔드포인트, SASE, ID 보안, 취약점 관리 |
+| 클라우드 인프라 | 퍼블릭 클라우드, IaaS/PaaS, 호스팅 인프라 |
+| 관측성 / DevOps | 모니터링, 로그/검색, 개발 플랫폼 |
+| 데이터 클라우드 / 분석 | 데이터 플랫폼, 분석, 자동화 소프트웨어 |
+| SaaS / 애플리케이션 | ERP, CRM, 업무용 SaaS, AI 소프트웨어 등 |
+| 시스템 소프트웨어 | 운영체제 및 기반 시스템 소프트웨어 |
+| 인터넷 / 클라우드 인프라 | 도메인, 인터넷 인프라 서비스 |
 | IT 컨설팅 / 서비스 | IT 아웃소싱, 컨설팅, 관리 서비스 |
 | 데이터 처리 / 아웃소싱 | 데이터 처리, BPO 서비스 |
 | ETF | 소프트웨어 섹터 상장지수펀드 |

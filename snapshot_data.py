@@ -6,6 +6,8 @@ Snapshot date: 2026-04-10  (sourced from reference image + estimated values)
 
 import pandas as pd
 
+from stock_universe import SUBINDUSTRY_CATEGORY, TICKER_SUBINDUSTRY_OVERRIDES
+
 SNAPSHOT_DATE = "2026-04-10"
 
 # fmt: off
@@ -52,8 +54,12 @@ _ROWS = [
     ("CYBR",  "CyberArk Software",     "Systems Software",                      "시스템 소프트웨어 / 보안", "Supplementary", 285.00, -13.50,  -4.52,  420.00, 220.00, -32.14, "USD"),
     ("NET",   "Cloudflare",            "Internet Services & Infrastructure",    "인터넷 / 클라우드 인프라", "Supplementary",  90.50,  -4.80,  -5.04,  135.00,  55.00, -32.96, "USD"),
     ("TENB",  "Tenable Holdings",      "Systems Software",                      "시스템 소프트웨어 / 보안", "Supplementary",  40.50,  -1.60,  -3.80,   62.00,  30.00, -34.68, "USD"),
+    ("QLYS",  "Qualys",                "Systems Software",                      "시스템 소프트웨어 / 보안", "Supplementary", 125.00,  -4.40,  -3.40,  175.00, 115.00, -28.57, "USD"),
+    ("RPD",   "Rapid7",                "Systems Software",                      "시스템 소프트웨어 / 보안", "Supplementary",  28.50,  -1.40,  -4.68,   62.00,  24.00, -54.03, "USD"),
     ("CHKP",  "Check Point Software",  "Systems Software",                      "시스템 소프트웨어 / 보안", "Supplementary", 190.00,  -6.50,  -3.30,  230.00, 155.00, -17.39, "USD"),
     ("VRNS",  "Varonis Systems",       "Systems Software",                      "시스템 소프트웨어 / 보안", "Supplementary",  42.80,  -2.20,  -4.89,   65.00,  30.00, -34.15, "USD"),
+    ("BB",    "BlackBerry",            "Systems Software",                      "시스템 소프트웨어 / 보안", "Supplementary",   3.80,  -0.12,  -3.06,    6.00,   2.20, -36.67, "USD"),
+    ("FSLY",  "Fastly",                "Internet Services & Infrastructure",    "인터넷 / 클라우드 인프라", "Supplementary",   7.20,  -0.42,  -5.51,   25.00,   5.50, -71.20, "USD"),
     # ── Supplementary: Cloud / SaaS ──────────────────────────────────────────
     ("SNOW",  "Snowflake",             "Application Software",                  "애플리케이션 소프트웨어", "Supplementary", 120.50,  -6.80,  -5.34,  240.00,  90.00, -49.79, "USD"),
     ("HUBS",  "HubSpot",              "Application Software",                  "애플리케이션 소프트웨어", "Supplementary", 380.00, -18.00,  -4.52,  680.00, 320.00, -44.12, "USD"),
@@ -64,6 +70,8 @@ _ROWS = [
     ("CFLT",  "Confluent",            "Application Software",                  "애플리케이션 소프트웨어", "Supplementary",  22.50,  -1.20,  -5.06,   40.00,  15.00, -43.75, "USD"),
     ("ESTC",  "Elastic N.V.",         "Application Software",                  "애플리케이션 소프트웨어", "Supplementary",  75.00,  -3.80,  -4.83,  120.00,  55.00, -37.50, "USD"),
     ("DOCN",  "DigitalOcean",         "Internet Services & Infrastructure",    "인터넷 / 클라우드 인프라", "Supplementary",  30.50,  -1.50,  -4.69,   52.00,  22.00, -41.35, "USD"),
+    ("DOMO",  "Domo",                 "Application Software",                  "애플리케이션 소프트웨어", "Supplementary",   7.40,  -0.35,  -4.52,   14.00,   6.00, -47.14, "USD"),
+    ("BAND",  "Bandwidth",            "Application Software",                  "애플리케이션 소프트웨어", "Supplementary",  15.20,  -0.80,  -5.00,   28.00,  11.00, -45.71, "USD"),
     # ── Supplementary: Dev Tools ─────────────────────────────────────────────
     ("TEAM",  "Atlassian",            "Application Software",                  "애플리케이션 소프트웨어", "Supplementary", 185.00,  -9.00,  -4.64,  280.00, 140.00, -33.93, "USD"),
     ("GTLB",  "GitLab",              "Application Software",                  "애플리케이션 소프트웨어", "Supplementary",  42.50,  -2.20,  -4.92,   72.00,  30.00, -40.97, "USD"),
@@ -75,6 +83,7 @@ _ROWS = [
     ("PAYC",  "Paycom Software",     "Application Software",                  "애플리케이션 소프트웨어", "Supplementary", 145.00,  -6.50,  -4.29,  265.00, 115.00, -45.28, "USD"),
     ("PCTY",  "Paylocity",           "Application Software",                  "애플리케이션 소프트웨어", "Supplementary", 125.00,  -5.80,  -4.43,  210.00,  98.00, -40.48, "USD"),
     ("BILL",  "Bill.com Holdings",   "Application Software",                  "애플리케이션 소프트웨어", "Supplementary",  42.80,  -2.10,  -4.68,  160.00,  35.00, -73.25, "USD"),
+    ("QTWO",  "Q2 Holdings",          "Application Software",                  "애플리케이션 소프트웨어", "Supplementary",  82.00,  -3.10,  -3.64,  112.00,  52.00, -26.79, "USD"),
     ("HOOD",  "Robinhood Markets",   "Application Software",                  "애플리케이션 소프트웨어", "Supplementary",  69.42,  -2.41,  -3.35,  149.76,  17.36, -53.65, "USD"),
     ("COIN",  "Coinbase Global",     "Application Software",                  "애플리케이션 소프트웨어", "Supplementary", 169.69,  -5.40,  -3.08,  349.75, 123.50, -51.48, "USD"),
     ("CRCL",  "Circle Internet Group","Application Software",                 "애플리케이션 소프트웨어", "Supplementary",  89.77,  -4.67,  -4.94,  299.00,  55.00, -70.01, "USD"),
@@ -93,6 +102,7 @@ _ROWS = [
     ("WCLD",  "WisdomTree Cloud Computing ETF",      "ETF", "ETF", "Supplementary",  20.50, -0.95,  -4.43,  32.00,  16.00, -35.94, "USD"),
     ("BUG",   "Global X Cybersecurity ETF",          "ETF", "ETF", "Supplementary",  18.20, -0.72,  -3.80,  25.00,  14.00, -27.20, "USD"),
     ("SKYY",  "First Trust Cloud Computing ETF",     "ETF", "ETF", "Supplementary",  75.50, -3.10,  -3.94, 110.00,  60.00, -31.36, "USD"),
+    ("CIBR",  "First Trust Nasdaq Cybersecurity ETF", "ETF", "ETF", "Supplementary",  65.20, -2.10,  -3.12,  76.00,  55.00, -14.21, "USD"),
     ("CLOU",  "Global X Cloud Computing ETF",        "ETF", "ETF", "Supplementary",  14.80, -0.65,  -4.21,  22.00,  11.00, -32.73, "USD"),
     ("CONL",  "GraniteShares 2x Long COIN ETF",      "ETF", "ETF", "Supplementary",   6.58, -0.43,  -6.13,  57.00,   3.00, -88.46, "USD"),
 ]
@@ -107,6 +117,11 @@ _COLS = [
 
 def get_snapshot_df() -> pd.DataFrame:
     df = pd.DataFrame(_ROWS, columns=_COLS)
+    df["sub_industry"] = df.apply(
+        lambda row: TICKER_SUBINDUSTRY_OVERRIDES.get(row["ticker"], row["sub_industry"]),
+        axis=1,
+    )
+    df["category"] = df["sub_industry"].map(SUBINDUSTRY_CATEGORY).fillna("기타")
     df["prev_close"]  = df["current_price"] - df["day_change"]
     df["market_cap"]  = None
     df["volume"]      = None

@@ -23,11 +23,19 @@ logger = logging.getLogger(__name__)
 # Sub-industry → internal category mapping
 # ---------------------------------------------------------------------------
 SUBINDUSTRY_CATEGORY = {
-    "Application Software":                      "애플리케이션 소프트웨어",
-    "Systems Software":                          "시스템 소프트웨어 / 보안",
+    "Application Software":                      "SaaS / 애플리케이션",
+    "Systems Software":                          "시스템 소프트웨어",
     "Internet Services & Infrastructure":        "인터넷 / 클라우드 인프라",
     "IT Consulting & Other Services":            "IT 컨설팅 / 서비스",
     "Data Processing & Outsourced Services":     "데이터 처리 / 아웃소싱",
+    "Cybersecurity":                             "사이버보안",
+    "Zero Trust / SASE":                         "사이버보안",
+    "Identity Security":                         "사이버보안",
+    "Vulnerability / Exposure Management":       "사이버보안",
+    "CDN / Edge Network":                        "CDN / 엣지 인프라",
+    "Cloud Infrastructure":                      "클라우드 인프라",
+    "Observability / DevOps":                    "관측성 / DevOps",
+    "Data Cloud / Analytics":                    "데이터 클라우드 / 분석",
     "ETF":                                       "ETF",
     "Other":                                     "기타",
 }
@@ -40,34 +48,41 @@ SUBINDUSTRY_KR = {v: v for v in SUBINDUSTRY_CATEGORY.values()}
 # ---------------------------------------------------------------------------
 SUPPLEMENTARY: dict[str, dict] = {
     # ── Cybersecurity ──────────────────────────────────────────────
-    "ZS":    {"name_en": "Zscaler",                  "sub_industry": "Systems Software"},
-    "OKTA":  {"name_en": "Okta",                     "sub_industry": "Systems Software"},
-    "S":     {"name_en": "SentinelOne",              "sub_industry": "Systems Software"},
-    "CYBR":  {"name_en": "CyberArk Software",        "sub_industry": "Systems Software"},
-    "NET":   {"name_en": "Cloudflare",               "sub_industry": "Internet Services & Infrastructure"},
-    "TENB":  {"name_en": "Tenable Holdings",         "sub_industry": "Systems Software"},
-    "QLYS":  {"name_en": "Qualys",                   "sub_industry": "Systems Software"},
-    "RPD":   {"name_en": "Rapid7",                   "sub_industry": "Systems Software"},
-    "VRNS":  {"name_en": "Varonis Systems",          "sub_industry": "Systems Software"},
-    "CHKP":  {"name_en": "Check Point Software",     "sub_industry": "Systems Software"},
-    "BB":    {"name_en": "BlackBerry",               "sub_industry": "Systems Software"},
+    "ZS":    {"name_en": "Zscaler",                  "sub_industry": "Zero Trust / SASE"},
+    "OKTA":  {"name_en": "Okta",                     "sub_industry": "Identity Security"},
+    "S":     {"name_en": "SentinelOne",              "sub_industry": "Cybersecurity"},
+    "CYBR":  {"name_en": "CyberArk Software",        "sub_industry": "Identity Security"},
+    "TENB":  {"name_en": "Tenable Holdings",         "sub_industry": "Vulnerability / Exposure Management"},
+    "QLYS":  {"name_en": "Qualys",                   "sub_industry": "Vulnerability / Exposure Management"},
+    "RPD":   {"name_en": "Rapid7",                   "sub_industry": "Vulnerability / Exposure Management"},
+    "VRNS":  {"name_en": "Varonis Systems",          "sub_industry": "Cybersecurity"},
+    "CHKP":  {"name_en": "Check Point Software",     "sub_industry": "Cybersecurity"},
+    "BB":    {"name_en": "BlackBerry",               "sub_industry": "Cybersecurity"},
+    "SAIL":  {"name_en": "SailPoint",                "sub_industry": "Identity Security"},
+    "RDWR":  {"name_en": "Radware",                  "sub_industry": "CDN / Edge Network"},
+    "YOU":   {"name_en": "Clear Secure",             "sub_industry": "Identity Security"},
+    # ── CDN / Edge ─────────────────────────────────────────────────
+    "NET":   {"name_en": "Cloudflare",               "sub_industry": "CDN / Edge Network"},
+    "FSLY":  {"name_en": "Fastly",                   "sub_industry": "CDN / Edge Network"},
     # ── Cloud / SaaS ───────────────────────────────────────────────
-    "SNOW":  {"name_en": "Snowflake",                "sub_industry": "Application Software"},
+    "AMZN":  {"name_en": "Amazon.com",               "sub_industry": "Cloud Infrastructure"},
+    "GOOGL": {"name_en": "Alphabet",                 "sub_industry": "Cloud Infrastructure"},
+    "SNOW":  {"name_en": "Snowflake",                "sub_industry": "Data Cloud / Analytics"},
     "HUBS":  {"name_en": "HubSpot",                  "sub_industry": "Application Software"},
     "VEEV":  {"name_en": "Veeva Systems",            "sub_industry": "Application Software"},
-    "MDB":   {"name_en": "MongoDB",                  "sub_industry": "Application Software"},
+    "MDB":   {"name_en": "MongoDB",                  "sub_industry": "Data Cloud / Analytics"},
     "ZM":    {"name_en": "Zoom Video Communications","sub_industry": "Application Software"},
     "TWLO":  {"name_en": "Twilio",                   "sub_industry": "Application Software"},
-    "CFLT":  {"name_en": "Confluent",                "sub_industry": "Application Software"},
-    "ESTC":  {"name_en": "Elastic N.V.",             "sub_industry": "Application Software"},
-    "DOCN":  {"name_en": "DigitalOcean",             "sub_industry": "Internet Services & Infrastructure"},
-    "DOMO":  {"name_en": "Domo",                     "sub_industry": "Application Software"},
+    "CFLT":  {"name_en": "Confluent",                "sub_industry": "Data Cloud / Analytics"},
+    "ESTC":  {"name_en": "Elastic N.V.",             "sub_industry": "Observability / DevOps"},
+    "DOCN":  {"name_en": "DigitalOcean",             "sub_industry": "Cloud Infrastructure"},
+    "DOMO":  {"name_en": "Domo",                     "sub_industry": "Data Cloud / Analytics"},
     "BAND":  {"name_en": "Bandwidth",                "sub_industry": "Application Software"},
     # ── Dev Tools & Platforms ──────────────────────────────────────
-    "TEAM":  {"name_en": "Atlassian",                "sub_industry": "Application Software"},
-    "GTLB":  {"name_en": "GitLab",                   "sub_industry": "Application Software"},
+    "TEAM":  {"name_en": "Atlassian",                "sub_industry": "Observability / DevOps"},
+    "GTLB":  {"name_en": "GitLab",                   "sub_industry": "Observability / DevOps"},
     "APPN":  {"name_en": "Appian",                   "sub_industry": "Application Software"},
-    "FROG":  {"name_en": "JFrog",                    "sub_industry": "Application Software"},
+    "FROG":  {"name_en": "JFrog",                    "sub_industry": "Observability / DevOps"},
     "U":     {"name_en": "Unity Software",           "sub_industry": "Application Software"},
     "RBLX":  {"name_en": "Roblox",                   "sub_industry": "Application Software"},
     # ── Fintech Software ───────────────────────────────────────────
@@ -80,7 +95,7 @@ SUPPLEMENTARY: dict[str, dict] = {
     "CRCL":  {"name_en": "Circle Internet Group",   "sub_industry": "Application Software"},
     # ── AI / Data Software ─────────────────────────────────────────
     "AI":    {"name_en": "C3.ai",                    "sub_industry": "Application Software"},
-    "PATH":  {"name_en": "UiPath",                   "sub_industry": "Application Software"},
+    "PATH":  {"name_en": "UiPath",                   "sub_industry": "Data Cloud / Analytics"},
     "BBAI":  {"name_en": "BigBear.ai",               "sub_industry": "Application Software"},
     "SOUN":  {"name_en": "SoundHound AI",            "sub_industry": "Application Software"},
     "TEM":   {"name_en": "Tempus AI",                "sub_industry": "Application Software"},
@@ -97,7 +112,50 @@ SUPPLEMENTARY: dict[str, dict] = {
     "SKYY":  {"name_en": "First Trust Cloud Computing ETF",     "sub_industry": "ETF"},
     "HACK":  {"name_en": "ETFMG Prime Cyber Security ETF",      "sub_industry": "ETF"},
     "CLOU":  {"name_en": "Global X Cloud Computing ETF",        "sub_industry": "ETF"},
+    "CIBR":  {"name_en": "First Trust Nasdaq Cybersecurity ETF", "sub_industry": "ETF"},
     "CONL":  {"name_en": "GraniteShares 2x Long COIN ETF",      "sub_industry": "ETF"},
+}
+
+# S&P rows take precedence during de-duplication, so apply thematic overrides
+# after merging. This keeps CDN/security/cloud leaders visible in the app.
+TICKER_SUBINDUSTRY_OVERRIDES = {
+    "AKAM": "CDN / Edge Network",
+    "NET": "CDN / Edge Network",
+    "FSLY": "CDN / Edge Network",
+    "RDWR": "CDN / Edge Network",
+    "CRWD": "Cybersecurity",
+    "FTNT": "Cybersecurity",
+    "PANW": "Cybersecurity",
+    "GEN": "Cybersecurity",
+    "ZS": "Zero Trust / SASE",
+    "OKTA": "Identity Security",
+    "CYBR": "Identity Security",
+    "SAIL": "Identity Security",
+    "YOU": "Identity Security",
+    "S": "Cybersecurity",
+    "CHKP": "Cybersecurity",
+    "VRNS": "Cybersecurity",
+    "BB": "Cybersecurity",
+    "TENB": "Vulnerability / Exposure Management",
+    "QLYS": "Vulnerability / Exposure Management",
+    "RPD": "Vulnerability / Exposure Management",
+    "AMZN": "Cloud Infrastructure",
+    "GOOGL": "Cloud Infrastructure",
+    "MSFT": "Cloud Infrastructure",
+    "ORCL": "Cloud Infrastructure",
+    "IBM": "Cloud Infrastructure",
+    "DOCN": "Cloud Infrastructure",
+    "DDOG": "Observability / DevOps",
+    "TEAM": "Observability / DevOps",
+    "GTLB": "Observability / DevOps",
+    "FROG": "Observability / DevOps",
+    "ESTC": "Observability / DevOps",
+    "SNOW": "Data Cloud / Analytics",
+    "MDB": "Data Cloud / Analytics",
+    "CFLT": "Data Cloud / Analytics",
+    "DOMO": "Data Cloud / Analytics",
+    "PLTR": "Data Cloud / Analytics",
+    "PATH": "Data Cloud / Analytics",
 }
 
 # S&P 500 sub-industries that belong to the software sector
@@ -157,6 +215,10 @@ def build_universe(include_etfs: bool = True) -> pd.DataFrame:
 
     # De-duplicate: S&P 500 entries take precedence
     combined = combined.drop_duplicates(subset="ticker", keep="first")
+    combined["sub_industry"] = combined.apply(
+        lambda row: TICKER_SUBINDUSTRY_OVERRIDES.get(row["ticker"], row["sub_industry"]),
+        axis=1,
+    )
 
     # Map to category
     combined["category"] = combined["sub_industry"].map(
